@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ScalarConverter.cpp                                :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: yasamankarimi <yasamankarimi@student.42    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/16 18:12:12 by yasamankari       #+#    #+#             */
-/*   Updated: 2025/07/16 20:52:57 by yasamankari      ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   ScalarConverter.cpp                                :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: yasamankarimi <yasamankarimi@student.42      +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2025/07/16 18:12:12 by yasamankari   #+#    #+#                 */
+/*   Updated: 2025/07/17 11:39:17 by ykarimi       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 #include <stdexcept>
 
 /* -------------------------- Validation Helpers -------------------------- */
-
 bool ScalarConverter::isPrintableChar(double value) {
     if (!isConvertibleChar(value))
         return false;
@@ -35,7 +34,7 @@ bool ScalarConverter::isConvertibleChar(double value) {
     return (value >= 0 && value <= 127);
 }
 
-/* can't convert NaN or big num to int */
+/* can't convert NaN or inf to int - has to be within int range */
 bool ScalarConverter::isConvertibleInt(double value) {
     if (std::isnan(value) || std::isinf(value))
         return false;
@@ -51,12 +50,10 @@ bool ScalarConverter::isPseudoLiteral(const std::string& str) {
 }
 
 /* -------------------------- Output Helpers -------------------------- */
-
-
 void ScalarConverter::printChar(double value) {
-    std::cout << "char: ";
+    std::cout << "Char: ";
     if (!isConvertibleChar(value))
-        std::cout << "impossible\n";
+        std::cout << "Impossible\n";
     else if (!isPrintableChar(value))
         std::cout << "Non displayable\n";
     else
@@ -64,21 +61,21 @@ void ScalarConverter::printChar(double value) {
 }
 
 void ScalarConverter::printInt(double value) {
-    std::cout << "int: ";
+    std::cout << "Int: ";
     if (!isConvertibleInt(value))
-        std::cout << "impossible\n";
+        std::cout << "Impossible\n";
     else
         std::cout << static_cast<int>(value) << "\n";
 }
 
 void ScalarConverter::printFloat(double value) {
-    std::cout << "float: ";
+    std::cout << "Float: ";
     std::cout << std::fixed << std::setprecision(1)
               << static_cast<float>(value) << "f\n";
 }
 
 void ScalarConverter::printDouble(double value) {
-    std::cout << "double: ";
+    std::cout << "Double: ";
     std::cout << std::fixed << std::setprecision(1)
               << value << "\n";
 }
@@ -118,13 +115,10 @@ ScalarType ScalarConverter::detectType(const std::string& literal) {
     } catch (...) {
         return TYPE_INVALID;
     }
-
     return TYPE_INVALID;
 }
 
 /* -------------------------- Conversion Functuons -------------------------- */
-
-
 double ScalarConverter::convertToDouble(const std::string& literal, ScalarType type) {
     switch (type) {
         case TYPE_CHAR:
@@ -172,3 +166,25 @@ void ScalarConverter::convert(const std::string& literal) {
     printFloat(value);
     printDouble(value);
 }
+
+
+/*
+<limits>
+std::numeric_limits<int>::min();
+std::numeric_limits<int>::max();
+std::numeric_limits<double>::infinity();
+std::numeric_limits<double>::quiet_NaN();
+
+
+conversions
+std::stoi(), std::stof(), std::stod()
+
+exception
+std::invalid_argument
+std::out_of_range
+
+formatting:
+std::setprecision
+
+
+*/
